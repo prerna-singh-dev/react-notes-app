@@ -1,25 +1,33 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 function NewNote({ addNewNote, noteToUpdate }) {
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
+  const [disabled, setDisabled] = useState(true);
 
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (!noteToUpdate) return;
     if (titleRef.current && bodyRef.current) {
-      titleRef.current.value = noteToUpdate[0].title || "";
-      bodyRef.current.value = noteToUpdate[0].body || "";
+      titleRef.current.value = noteToUpdate.title || "";
+      bodyRef.current.value = noteToUpdate.body || "";
+      setDisabled(!titleRef.current.value || !bodyRef.current.value);
     }
   }, [noteToUpdate]);
 
+  const handleChange = () => {
+    setDisabled(!titleRef.current.value || !bodyRef.current.value);
+  };
+
   const createNewNote = () => {
     let newNote = null;
+    if (!titleRef.current.value || !bodyRef.current.value) return;
+
     if (noteToUpdate != null) {
       newNote = {
-        id: noteToUpdate[0].id,
+        id: noteToUpdate.id,
         title: titleRef.current.value,
         body: bodyRef.current.value,
         createdOn: Date.now(),
@@ -34,7 +42,7 @@ function NewNote({ addNewNote, noteToUpdate }) {
         pinned: false,
       };
     }
-    if (!titleRef.current || !bodyRef.current) return;
+
     addNewNote(newNote);
   };
   return (
@@ -44,27 +52,47 @@ function NewNote({ addNewNote, noteToUpdate }) {
           type="text"
           name="title"
           id="title"
+          aria-label="Enter Note Title"
           ref={titleRef}
+          onChange={handleChange}
           className={`${
-            theme === "light" ? "bg-gray-100 white" : "bg-gray-900"
-          }  w-full py-2 px-2 rounded-md text-sm mb-4`}
+            theme === "light"
+              ? "bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-gray-300 focus:border-gray-400"
+              : "bg-gray-800 border border-gray-600 focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+          } w-full py-2.5 px-3 rounded-lg text-sm mb-4 outline-none transition-colors`}
           placeholder="Title..."
+          aria-required="true"
+          required
         />
         <textarea
           name="noteBody"
           id="noteBody"
+          aria-label="Enter Note Description"
           ref={bodyRef}
+          onChange={handleChange}
           className={`${
-            theme === "light" ? "bg-gray-100 white" : "bg-gray-900"
-          }  w-full py-2 px-2 rounded-md text-sm min-h-24 resize-none`}
+            theme === "light"
+              ? "bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-gray-300 focus:border-gray-400"
+              : "bg-gray-800 border border-gray-600 focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+          } w-full py-2.5 px-3 rounded-lg text-sm min-h-28 resize-none outline-none transition-colors`}
           placeholder="Description..."
+          aria-required="true"
+          required
         ></textarea>
 
         <button
+          type="button"
           onClick={createNewNote}
-          className={`text-white bg-gray-900 px-4 py-2 text-sm rounded-md mt-4`}
+          aria-label={noteToUpdate !== null ? "Edit Note" : "Save Note"}
+          className={`text-white px-5 py-2.5 text-sm font-medium rounded-lg mt-4 transition-colors  ${
+            disabled ? "cursor-not-allowed" : "cursor-pointer"
+          } ${
+            theme === "light"
+              ? "bg-gray-800 hover:bg-gray-700"
+              : "bg-gray-600 hover:bg-gray-500"
+          }`}
         >
-          {noteToUpdate !== null ? "Edit" : "Save"}
+          Save
         </button>
       </div>
     </section>

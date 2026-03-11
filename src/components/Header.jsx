@@ -4,15 +4,19 @@ import { ThemeContext } from "../context/ThemeContext";
 function Header() {
   const { handleThemeChange, theme } = useContext(ThemeContext);
   return (
-    <header>
-      <div className="flex justify-between">
-        <h1 className="text-2xl">Notes</h1>
-        <ul className="list-none flex ">
-          <li className="mx-2">
+    <header className="pb-6 border-b border-gray-200 dark:border-gray-600">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Notes</h1>
+        <ul className="list-none flex items-center gap-1">
+          {/* <li>
             <button
+              type="button"
+              aria-label="Pin Notes"
               className={`${
-                theme === "dark" ? "white" : "text-gray-800"
-              } cursor-pointer`}
+                theme === "dark"
+                  ? "text-white"
+                  : "text-gray-700 hover:text-white"
+              } p-1.5 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors`}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <g transform="rotate(25 12 12)">
@@ -31,9 +35,14 @@ function Header() {
                 </g>
               </svg>
             </button>
-          </li>
-          <li className="mx-2">
-            <button className="cursor-pointer" onClick={handleThemeChange}>
+          </li> */}
+          <li>
+            <button
+              type="button"
+              aria-label="Change Theme"
+              className="p-1.5 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              onClick={handleThemeChange}
+            >
               {theme === "dark" ? (
                 <svg width="24" height="24" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="5" fill="#FFC107" />

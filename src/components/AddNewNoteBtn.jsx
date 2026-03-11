@@ -5,9 +5,13 @@ function AddNewNoteBtn({ addNote }) {
   const { theme } = useContext(ThemeContext);
   return (
     <button
+      type="button"
+      aria-label="Add New Note"
       className={`${
-        theme === "light" ? "bg-gray-800 text-white" : "bg-white  text-gray-800"
-      } w-12 h-12  rounded-md flex items-center justify-center cursor-pointer float-right`}
+        theme === "light"
+          ? "bg-gray-800 text-white hover:bg-gray-700 shadow-md hover:shadow-lg"
+          : "bg-white text-gray-800 hover:bg-gray-100 shadow-md hover:shadow-lg"
+      } w-12 h-12 rounded-xl flex items-center justify-center cursor-pointer float-right transition-all active:scale-95`}
       onClick={addNote}
     >
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none">

@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import AddNewNoteBtn from "./AddNewNoteBtn";
 import NewNote from "./NewNote";
 import NoteCard from "./NoteCard";
+import NoteViewModal from "./NoteViewModal";
 import { ThemeContext } from "../context/ThemeContext";
 
 function NotesBlock() {
@@ -11,48 +12,48 @@ function NotesBlock() {
   const notesFromStorage = JSON.parse(localStorage.getItem("noteList"));
   const [notesList, setNotesList] = useState(notesFromStorage || []);
   const [noteToUpdate, setNoteToUpdate] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null);
 
   const { theme } = useContext(ThemeContext);
 
+  const closeModal = () => setSelectedNote(null);
+
   useEffect(() => {
-    if (
-      searchText.trim() === "" &&
-      (notesFromStorage !== undefined || notesFromStorage !== null)
-    ) {
-      setNotesList(JSON.parse(localStorage.getItem("noteList")));
+    if (searchText.trim() === "") {
+      setNotesList(JSON.parse(localStorage.getItem("noteList")) || []);
     }
   }, [searchText]);
 
   function fetchSearchData(searchInput) {
-    console.log(searchInput);
+    console.log("inside fetch:", searchInput);
     const searchTerm = new RegExp(searchInput, "i");
+    const dataFromStorage = JSON.parse(
+      localStorage.getItem("noteList") || noteList
+    );
     setSearchText(searchInput);
-    const noteList = notesList.filter(
+    const noteList = dataFromStorage.filter(
       (note) => searchTerm.test(note.title) || searchTerm.test(note.body)
     );
 
-    console.log("searched", noteList);
     setNotesList(noteList);
   }
 
   const addNewNote = (newNote) => {
-    console.log(newNote);
+    let updatedNotes = notesList;
     if (noteToUpdate) {
-      setNotesList((prev) =>
-        prev.map((note) => (note.id === newNote.id ? newNote : note))
+      updatedNotes = notesList.map((note) =>
+        note.id === newNote.id ? newNote : note
       );
       setNoteToUpdate(null);
     } else {
-      const updatedNotes = [...notesList, newNote];
-      setNotesList(updatedNotes);
-      localStorage.setItem("noteList", JSON.stringify(updatedNotes));
+      updatedNotes = [...notesList, newNote];
     }
-
+    setNotesList(updatedNotes);
+    localStorage.setItem("noteList", JSON.stringify(updatedNotes));
     setCreateNewNote(false);
   };
 
   const deleteNote = (id) => {
-    console.log("deleteid:", id);
     const updatedNotes = notesList.filter((note) => note.id !== id);
     setNotesList(updatedNotes);
     localStorage.setItem("noteList", JSON.stringify(updatedNotes));
@@ -60,7 +61,7 @@ function NotesBlock() {
 
   const editNote = (id) => {
     setCreateNewNote(true);
-    const noteToUpdate = notesList.filter((note) => note.id === id);
+    const noteToUpdate = notesList.find((note) => note.id === id);
     setNoteToUpdate(noteToUpdate);
   };
 
@@ -74,12 +75,15 @@ function NotesBlock() {
                 type="search"
                 name="searchNote"
                 id="searchNote"
+                aria-label="Search Notes"
                 value={searchText}
                 onChange={(e) => fetchSearchData(e.target.value)}
                 className={`${
-                  theme === "light" ? "text-gray-800" : " text-gray-400"
-                } border-gray-400 w-full border-2 py-2 px-2 rounded-md text-sm`}
-                placeholder="Search Notes..."
+                  theme === "light"
+                    ? "text-gray-800 border-gray-300 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+                    : "text-gray-200 border-gray-600 bg-gray-700/50 focus:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                } w-full border py-2.5 px-3 rounded-lg text-sm placeholder-gray-500 dark:placeholder-gray-400 transition-colors outline-none`}
+                placeholder="Search notes..."
               />
             </div>
           </section>
@@ -93,15 +97,27 @@ function NotesBlock() {
                       note={note}
                       deleteNote={deleteNote}
                       editNote={editNote}
+                      onTitleClick={setSelectedNote}
                     />
                   );
                 })}
               </ul>
             ) : (
-              <div className="w-full h-80 flex items-center justify-center">
-                <p className="text-gray-400 font-medium text-sm">
-                  <span></span>
-                  <span>Notes you add appear here</span>
+              <div
+                className={`w-full h-72 mb-4 flex items-center justify-center rounded-lg border border-dashed ${
+                  theme === "light"
+                    ? "border-gray-300 bg-gray-50/50"
+                    : "border-gray-600 bg-gray-800/30"
+                }`}
+              >
+                <p
+                  className={`text-sm ${
+                    theme === "light" ? "text-gray-500" : "text-gray-400"
+                  }`}
+                >
+                  {searchText
+                    ? "Not found !!"
+                    : "Notes you add will appear here"}
                 </p>
               </div>
             )}
@@ -112,6 +128,13 @@ function NotesBlock() {
       ) : (
         <NewNote addNewNote={addNewNote} noteToUpdate={noteToUpdate} />
       )}
+
+      <NoteViewModal
+        isOpen={!!selectedNote}
+        title={selectedNote?.title ?? ""}
+        description={selectedNote?.body ?? ""}
+        onClose={closeModal}
+      />
     </>
   );
 }

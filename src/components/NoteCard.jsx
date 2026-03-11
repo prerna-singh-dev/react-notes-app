@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
-function NoteCard({ note, deleteNote, editNote }) {
+function NoteCard({ note, deleteNote, editNote, onTitleClick }) {
   const { theme } = useContext(ThemeContext);
   const options = {
     day: "2-digit",
@@ -13,19 +13,35 @@ function NoteCard({ note, deleteNote, editNote }) {
   };
   let createdOn = new Date(note.createdOn);
   createdOn = createdOn.toLocaleString("en-GB", options);
+
   return (
     <li
       className={`${
-        theme === "light" ? "bg-gray-100" : "bg-gray-900"
-      } rounded-sm p-4 mb-2 relative `}
+        theme === "light"
+          ? "bg-gray-50 border border-gray-200 hover:border-gray-300"
+          : "bg-gray-800/80 border border-gray-700 hover:border-gray-600"
+      } rounded-lg p-4 mb-3 relative transition-colors`}
     >
-      <h5 className="text-sm mb-1 flex justify-between overflow-clip">
-        <span>{note.title}</span>
-        <span className="flex justify-center items-center">
+      <h5 className="text-sm font-medium mb-1.5 flex justify-between items-start gap-2 overflow-hidden">
+        <span className="truncate">
           <button
+            type="button"
+            aria-label={`View note: ${note.title}`}
+            className="cursor-pointer text-left hover:underline"
+            onClick={() => onTitleClick(note)}
+          >
+            {note.title}
+          </button>
+        </span>
+        <span className="flex justify-center items-center shrink-0 gap-0.5">
+          <button
+            aria-label="Edit Note"
+            type="button"
             className={`${
-              theme === "light" ? "text-gray-800" : "#fff"
-            } cursor-pointer`}
+              theme === "light"
+                ? "text-gray-600 hover:text-gray-900"
+                : "text-gray-400 hover:text-white"
+            } p-1 rounded cursor-pointer transition-colors`}
             onClick={() => editNote(note.id)}
           >
             <svg
@@ -44,10 +60,14 @@ function NoteCard({ note, deleteNote, editNote }) {
             </svg>
           </button>
           <button
+            type="button"
+            aria-label="Delete Note"
             onClick={() => deleteNote(note.id)}
             className={`${
-              theme === "light" ? "text-gray-800" : "#fff"
-            } cursor-pointer`}
+              theme === "light"
+                ? "text-gray-600 hover:text-red-600"
+                : "text-gray-400 hover:text-red-400"
+            } p-1 rounded cursor-pointer transition-colors`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -66,8 +86,14 @@ function NoteCard({ note, deleteNote, editNote }) {
           </button>
         </span>
       </h5>
-      <p className="text-xs">{note.body}</p>
-      <span className="right-2 bottom-1 text-[10px] text-gray-400 font-light absolute">
+      <p
+        className={`text-xs leading-relaxed line-clamp-2 mb-3 ${
+          theme === "light" ? "text-gray-600" : "text-gray-300"
+        }`}
+      >
+        {note.body}
+      </p>
+      <span className="right-3 bottom-2 text-[10px] text-gray-400 font-light absolute">
         {createdOn}
       </span>
     </li>

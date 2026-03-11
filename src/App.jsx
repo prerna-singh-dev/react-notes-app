@@ -12,9 +12,11 @@ function App() {
   return (
     <ThemeContextProvider value={{ theme, handleThemeChange }}>
       <main
-        className={`${
-          theme === "dark" ? "bg-gray-800  text-white" : "bg-white"
-        }  w-1/2 my-15 mx-auto p-6 flex flex-col justify-center rounded-md border-2 border-gray-800 shadow-md shadow-gray-600`}
+        className={`relative ${
+          theme === "dark"
+            ? "bg-gray-800 text-white border-gray-700 shadow-xl shadow-gray-900/30"
+            : "bg-white border-gray-200 shadow-lg shadow-gray-200"
+        } w-1/2 my-16 mx-auto p-8 flex flex-col justify-center rounded-xl border min-h-[32rem]`}
       >
         <Header />
         <NotesBlock />
