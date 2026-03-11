@@ -4,7 +4,7 @@ import NotesBlock from "./components/NotesBlock";
 import { ThemeContextProvider } from "./context/ThemeContext";
 
 function App() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
 
   const handleThemeChange = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -16,7 +16,7 @@ function App() {
           theme === "dark"
             ? "bg-gray-800 text-white border-gray-700 shadow-xl shadow-gray-900/30"
             : "bg-white border-gray-200 shadow-lg shadow-gray-200"
-        } w-3/4 md:w-1/2 my-16 mx-auto p-8 flex flex-col justify-center rounded-xl border min-h-[32rem]`}
+        } w-[92%]  md:w-1/2 my-16 mx-auto p-8 flex flex-col justify-center rounded-xl border min-h-[32rem]`}
       >
         <Header />
         <NotesBlock />
