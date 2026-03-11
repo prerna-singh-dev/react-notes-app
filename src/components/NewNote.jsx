@@ -1,8 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 function NewNote({ addNewNote, noteToUpdate }) {
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
+
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (!noteToUpdate) return;
@@ -42,20 +45,24 @@ function NewNote({ addNewNote, noteToUpdate }) {
           name="title"
           id="title"
           ref={titleRef}
-          className="bg-gray-900 w-full py-2 px-2 rounded-md text-sm mb-4"
+          className={`${
+            theme === "light" ? "bg-gray-100 white" : "bg-gray-900"
+          }  w-full py-2 px-2 rounded-md text-sm mb-4`}
           placeholder="Title..."
         />
         <textarea
           name="noteBody"
           id="noteBody"
           ref={bodyRef}
-          className="bg-gray-900 w-full py-2 px-2 rounded-md text-sm min-h-24 resize-none"
+          className={`${
+            theme === "light" ? "bg-gray-100 white" : "bg-gray-900"
+          }  w-full py-2 px-2 rounded-md text-sm min-h-24 resize-none`}
           placeholder="Description..."
         ></textarea>
 
         <button
           onClick={createNewNote}
-          className="bg-gray-900 px-4 py-2 text-sm rounded-md mt-4"
+          className={`text-white bg-gray-900 px-4 py-2 text-sm rounded-md mt-4`}
         >
           {noteToUpdate !== null ? "Edit" : "Save"}
         </button>

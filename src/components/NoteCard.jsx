@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
+
 function NoteCard({ note, deleteNote, editNote }) {
+  const { theme } = useContext(ThemeContext);
   const options = {
     day: "2-digit",
     month: "short",
@@ -10,18 +14,27 @@ function NoteCard({ note, deleteNote, editNote }) {
   let createdOn = new Date(note.createdOn);
   createdOn = createdOn.toLocaleString("en-GB", options);
   return (
-    <li className="bg-gray-900 rounded-sm p-4 mb-2 relative">
+    <li
+      className={`${
+        theme === "light" ? "bg-gray-100" : "bg-gray-900"
+      } rounded-sm p-4 mb-2 relative `}
+    >
       <h5 className="text-sm mb-1 flex justify-between overflow-clip">
         <span>{note.title}</span>
         <span className="flex justify-center items-center">
-          <button className="cursor-pointer" onClick={() => editNote(note.id)}>
+          <button
+            className={`${
+              theme === "light" ? "text-gray-800" : "#fff"
+            } cursor-pointer`}
+            onClick={() => editNote(note.id)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
               height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#ffffff"
+              stroke="currentColor"
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -32,7 +45,9 @@ function NoteCard({ note, deleteNote, editNote }) {
           </button>
           <button
             onClick={() => deleteNote(note.id)}
-            className="cursor-pointer"
+            className={`${
+              theme === "light" ? "text-gray-800" : "#fff"
+            } cursor-pointer`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +55,7 @@ function NoteCard({ note, deleteNote, editNote }) {
               height="16"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#ffffff"
+              stroke="currentColor"
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"

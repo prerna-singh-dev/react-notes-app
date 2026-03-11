@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import AddNewNoteBtn from "./AddNewNoteBtn";
 import NewNote from "./NewNote";
 import NoteCard from "./NoteCard";
+import { ThemeContext } from "../context/ThemeContext";
 
 function NotesBlock() {
   const [createNewNote, setCreateNewNote] = useState(false);
@@ -10,6 +11,8 @@ function NotesBlock() {
   const notesFromStorage = JSON.parse(localStorage.getItem("noteList"));
   const [notesList, setNotesList] = useState(notesFromStorage || []);
   const [noteToUpdate, setNoteToUpdate] = useState(null);
+
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (
@@ -73,7 +76,9 @@ function NotesBlock() {
                 id="searchNote"
                 value={searchText}
                 onChange={(e) => fetchSearchData(e.target.value)}
-                className="border-gray-400 w-full text-gray-400 border-2 py-2 px-2 rounded-md text-sm"
+                className={`${
+                  theme === "light" ? "text-gray-800" : " text-gray-400"
+                } border-gray-400 w-full border-2 py-2 px-2 rounded-md text-sm`}
                 placeholder="Search Notes..."
               />
             </div>

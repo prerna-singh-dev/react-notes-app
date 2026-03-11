@@ -1,7 +1,13 @@
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
+
 function AddNewNoteBtn({ addNote }) {
+  const { theme } = useContext(ThemeContext);
   return (
     <button
-      className="w-12 h-12 bg-white rounded-md flex items-center justify-center text-gray-800 cursor-pointer float-right"
+      className={`${
+        theme === "light" ? "bg-gray-800 text-white" : "bg-white  text-gray-800"
+      } w-12 h-12  rounded-md flex items-center justify-center cursor-pointer float-right`}
       onClick={addNote}
     >
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
